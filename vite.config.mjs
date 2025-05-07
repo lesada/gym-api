@@ -3,8 +3,10 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
 	plugins: [tsconfigPaths()],
-	coverage: {
-		reporter: ["text", "lcov"],
-		reportsDirectory: "./coverage",
+	test: {
+		coverage: {
+			reporter: ["text", "lcov"],
+			reportsDirectory: "./coverage",
+		},
 	},
 });

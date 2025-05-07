@@ -1,6 +1,7 @@
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
 import { compare } from "bcryptjs";
 import { describe, expect, test } from "vitest";
+import { UserAlreadyExistsError } from "./errors/user-already-exists-error";
 import { RegisterService } from "./register";
 
 describe("Register Service", () => {
@@ -21,5 +22,26 @@ describe("Register Service", () => {
 		);
 
 		expect(isPasswordCorrectlyHashed).toBeTruthy();
+	});
+
+	test("should not be able to register with same email twice", async () => {
+		const usersRepository = new InMemoryUsersRepository();
+		const registerUseCase = new RegisterService(usersRepository);
+
+		const email = "johndoe@example.com";
+
+		await registerUseCase.execute({
+			name: "John Doe",
+			email,
+			password: "123456",
+		});
+
+		expect(() =>
+			registerUseCase.execute({
+				name: "John Doe",
+				email,
+				password: "123456",
+			}),
+		).rejects.toBeInstanceOf(UserAlreadyExistsError);
 	});
 });

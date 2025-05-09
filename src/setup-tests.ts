@@ -13,9 +13,19 @@ vi.mock("@/services/factories/make-register-service", () => {
 	return {
 		makeRegisterService: () => {
 			const usersRepository = new InMemoryUsersRepository();
-			return new (require("@/services/register").RegisterService)(
-				usersRepository,
-			);
+			const { RegisterService } = require("@/services/register");
+			return new RegisterService(usersRepository);
+		},
+	};
+});
+
+// Mock the makeAuthenticateService to use the InMemoryUsersRepository
+vi.mock("@/services/factories/make-authenticate-service", () => {
+	return {
+		makeAuthenticateService: () => {
+			const usersRepository = new InMemoryUsersRepository();
+			const { AuthenticateService } = require("@/services/authenticate");
+			return new AuthenticateService(usersRepository);
 		},
 	};
 });

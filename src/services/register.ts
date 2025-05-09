@@ -1,12 +1,15 @@
 import type { UsersRepository } from "@/repositories/users-repository";
 import { hash } from "bcryptjs";
-import { UserAlreadyExistsError } from "./errors/user-already-exists-error";
+import { z } from "zod";
+import { UserAlreadyExistsError } from "./errors/user-already-exists";
 
-interface RegisterServiceRequest {
-	name: string;
-	email: string;
-	password: string;
-}
+export const RegisterServiceRequestSchema = z.object({
+	name: z.string(),
+	email: z.string().email(),
+	password: z.string(),
+});
+
+type RegisterServiceRequest = z.infer<typeof RegisterServiceRequestSchema>;
 
 export class RegisterService {
 	constructor(private readonly usersRepository: UsersRepository) {}

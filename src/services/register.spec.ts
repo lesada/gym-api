@@ -1,7 +1,7 @@
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
 import { compare } from "bcryptjs";
 import { describe, expect, test } from "vitest";
-import { UserAlreadyExistsError } from "./errors/user-already-exists-error";
+import { UserAlreadyExistsError } from "./errors/user-already-exists";
 import { RegisterService } from "./register";
 
 describe("Register Service", () => {

@@ -1,6 +1,31 @@
 import type { FastifyInstance } from "fastify";
-import { register } from "./controllers/register";
+import {
+	authenticate,
+	authenticateBodySchema,
+} from "./controllers/authenticate";
+import { register, registerBodySchema } from "./controllers/register";
 
 export async function appRoutes(app: FastifyInstance) {
-	app.post("/users", register);
+	app.post(
+		"/auth",
+		{
+			schema: {
+				body: authenticateBodySchema,
+				tags: ["users"],
+			},
+		},
+		authenticate,
+	);
+
+	app.post(
+		"/users",
+		{
+			schema: {
+				body: registerBodySchema,
+				tags: ["users"],
+				summary: "Register a new user",
+			},
+		},
+		register,
+	);
 }

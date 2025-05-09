@@ -1,72 +1,72 @@
+import { register } from "@/http/controllers/register";
 import { UserAlreadyExistsError } from "@/services/errors/user-already-exists";
 import { makeRegisterService } from "@/services/factories/make-register-service";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { type Mock, beforeEach, describe, expect, it, vi } from "vitest";
-import { register } from "./register";
 
+// Mock the necessary dependencies
 vi.mock("@/services/factories/make-register-service");
+vi.mock("@/repositories/prisma/prisma-users-repository");
 
-describe("register handler", () => {
-	function createMockReply(): FastifyReply {
-		const send = vi.fn();
-		const status = vi
-			.fn()
-			.mockReturnValue({ send }) as unknown as FastifyReply["status"];
-		return { status } as unknown as FastifyReply;
-	}
+describe("register controller", () => {
+	let mockRequest: FastifyRequest;
+	let mockReply: FastifyReply;
+	let registerService: { execute: vi.Mock };
 
 	beforeEach(() => {
+		// Mock the request and reply
+		mockRequest = {
+			body: {
+				name: "John",
+				email: "john@example.com",
+				password: "password123",
+			},
+		} as FastifyRequest;
+		mockReply = {
+			status: vi.fn().mockReturnThis(),
+			send: vi.fn(),
+		} as unknown as FastifyReply;
+
+		registerService = { execute: vi.fn() };
+
+		(vi.mocked(makeRegisterService) as Mock).mockReturnValue(registerService);
+
 		vi.clearAllMocks();
 	});
 
-	it("should register a user successfully", async () => {
-		const execute = vi.fn().mockResolvedValue(undefined);
-		(makeRegisterService as unknown as Mock).mockReturnValue({ execute });
-
-		const req = {
-			body: {
-				name: "Lauren",
-				email: "lauren@example.com",
-				password: "123456",
-			},
-		} as FastifyRequest;
-
-		const rep = createMockReply();
-
-		await register(req, rep);
-
-		expect(execute).toHaveBeenCalledWith({
-			name: "Lauren",
-			email: "lauren@example.com",
-			password: "123456",
+	it("should successfully register a user", async () => {
+		registerService.execute.mockResolvedValueOnce({
+			user: { email: "john@example.com", name: "John" },
 		});
-		expect(rep.status).toHaveBeenCalledWith(201);
-		expect(
-			(rep.status as Mock).mock.results[0].value.send,
-		).toHaveBeenCalledWith();
+
+		await register(mockRequest, mockReply);
+
+		expect(registerService.execute).toHaveBeenCalledWith({
+			name: "John",
+			email: "john@example.com",
+			password: "password123",
+		});
+		expect(mockReply.status).toHaveBeenCalledWith(201);
+		expect(mockReply.send).toHaveBeenCalled();
 	});
 
-	it("should return 409 if the user already exists", async () => {
-		const execute = vi.fn().mockRejectedValue(new UserAlreadyExistsError());
-		(makeRegisterService as unknown as Mock).mockReturnValue({ execute });
+	it("should return 409 if user already exists", async () => {
+		registerService.execute.mockRejectedValueOnce(new UserAlreadyExistsError());
 
-		const req = {
-			body: {
-				name: "Lauren",
-				email: "lauren@example.com",
-				password: "123456",
-			},
-		} as FastifyRequest;
+		await register(mockRequest, mockReply);
 
-		const rep = createMockReply();
-
-		await register(req, rep);
-
-		expect(rep.status).toHaveBeenCalledWith(409);
-		expect(
-			(rep.status as Mock).mock.results[0].value.send,
-		).toHaveBeenCalledWith({
+		expect(mockReply.status).toHaveBeenCalledWith(409);
+		expect(mockReply.send).toHaveBeenCalledWith({
 			message: "User already exists",
 		});
+	});
+
+	it("should return 400 if request body is invalid", async () => {
+		mockRequest.body = { name: "", email: "invalid-email", password: "123" };
+
+		await register(mockRequest, mockReply);
+
+		expect(mockReply.status).toHaveBeenCalledWith(400);
+		expect(mockReply.send).toHaveBeenCalled();
 	});
 });

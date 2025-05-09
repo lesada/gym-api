@@ -15,8 +15,8 @@ export async function authenticate(
 	const { email, password } = authenticateBodySchema.parse(request.body);
 
 	try {
-		const authenticateSerAuthenticateService = makeAuthenticateService();
-		await authenticateSerAuthenticateService.execute({
+		const authenticateService = makeAuthenticateService();
+		await authenticateService.execute({
 			email,
 			password,
 		});

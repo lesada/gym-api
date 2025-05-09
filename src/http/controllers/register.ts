@@ -10,14 +10,19 @@ export const registerBodySchema = z.object({
 });
 
 export async function register(req: FastifyRequest, rep: FastifyReply) {
-	const { name, email, password } = registerBodySchema.parse(req.body);
 	try {
+		const { name, email, password } = registerBodySchema.parse(req.body);
 		const registerService = makeRegisterService();
 		await registerService.execute({ name, email, password });
 	} catch (error) {
 		if (error instanceof UserAlreadyExistsError)
 			return rep.status(409).send({ message: error.message });
 
+		if (error instanceof z.ZodError)
+			return rep.status(400).send({ message: error.flatten().fieldErrors });
+
+		if (error instanceof Error)
+			return rep.status(400).send({ message: error.message });
 		throw error;
 	}
 

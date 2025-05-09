@@ -19,10 +19,10 @@ export async function register(req: FastifyRequest, rep: FastifyReply) {
 			return rep.status(409).send({ message: error.message });
 
 		if (error instanceof z.ZodError)
-			return rep.status(400).send({ message: error.flatten().fieldErrors });
+			return rep
+				.status(400)
+				.send({ message: error.format(), type: "validation" });
 
-		if (error instanceof Error)
-			return rep.status(400).send({ message: error.message });
 		throw error;
 	}
 

@@ -3,6 +3,7 @@ import { InvalidCredentialsError } from "@/services/errors/invalid-credentials";
 import { makeAuthenticateService } from "@/services/factories/make-authenticate-service";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { type Mock, beforeEach, describe, expect, it, vi } from "vitest";
+import { ZodError } from "zod";
 
 vi.mock("@/services/factories/make-authenticate-service", () => ({
 	makeAuthenticateService: vi.fn(),
@@ -54,5 +55,22 @@ describe("authenticate controller", () => {
 
 		expect(mockReply.status).toHaveBeenCalledWith(400);
 		expect(mockReply.send).toHaveBeenCalled();
+	});
+
+	it("should return 400 if ZodError is thrown", async () => {
+		const mockAuthenticateService = {
+			execute: vi.fn().mockRejectedValue(new ZodError([])),
+		};
+
+		(makeAuthenticateService as Mock).mockReturnValue(mockAuthenticateService);
+
+		await authenticate(mockRequest, mockReply);
+
+		expect(mockReply.status).toHaveBeenCalledWith(400);
+		expect(mockReply.send).toHaveBeenCalledWith(
+			expect.objectContaining({
+				type: "validation",
+			}),
+		);
 	});
 });

@@ -1,7 +1,7 @@
 import { InvalidCredentialsError } from "@/services/errors/invalid-credentials";
 import { makeAuthenticateService } from "@/services/factories/make-authenticate-service";
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { z } from "zod";
+import { ZodError, z } from "zod";
 
 export const authenticateBodySchema = z.object({
 	email: z.string().email(),
@@ -24,11 +24,10 @@ export async function authenticate(
 			return reply.status(400).send();
 		}
 
-		if (error instanceof z.ZodError)
-			return reply.status(400).send({ message: error.flatten().fieldErrors });
-
-		if (error instanceof Error)
-			return reply.status(400).send({ message: error.message });
+		if (error instanceof ZodError)
+			return reply
+				.status(400)
+				.send({ message: error.format(), type: "validation" });
 
 		throw error;
 	}

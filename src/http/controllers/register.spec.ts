@@ -3,6 +3,7 @@ import { UserAlreadyExistsError } from "@/services/errors/user-already-exists";
 import { makeRegisterService } from "@/services/factories/make-register-service";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { type Mock, beforeEach, describe, expect, it, vi } from "vitest";
+import { ZodError } from "zod";
 
 vi.mock("@/services/factories/make-register-service");
 vi.mock("@/repositories/prisma/prisma-users-repository");
@@ -66,5 +67,22 @@ describe("register controller", () => {
 
 		expect(mockReply.status).toHaveBeenCalledWith(400);
 		expect(mockReply.send).toHaveBeenCalled();
+	});
+
+	it("should return 400 if ZodError is thrown", async () => {
+		const mockAuthenticateService = {
+			execute: vi.fn().mockRejectedValue(new ZodError([])),
+		};
+
+		(makeRegisterService as Mock).mockReturnValue(mockAuthenticateService);
+
+		await register(mockRequest, mockReply);
+
+		expect(mockReply.status).toHaveBeenCalledWith(400);
+		expect(mockReply.send).toHaveBeenCalledWith(
+			expect.objectContaining({
+				type: "validation",
+			}),
+		);
 	});
 });

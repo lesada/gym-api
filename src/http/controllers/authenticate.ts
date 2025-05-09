@@ -1,6 +1,5 @@
-import { PrismaUsersRepository } from "@/repositories/prisma/prisma-users-repository";
-import { AuthenticateService } from "@/services/authenticate";
 import { InvalidCredentialsError } from "@/services/errors/invalid-credentials";
+import { makeAuthenticateService } from "@/services/factories/make-authenticate-service";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
@@ -16,11 +15,7 @@ export async function authenticate(
 	const { email, password } = authenticateBodySchema.parse(request.body);
 
 	try {
-		const usersRepository = new PrismaUsersRepository();
-		const authenticateSerAuthenticateService = new AuthenticateService(
-			usersRepository,
-		);
-
+		const authenticateSerAuthenticateService = makeAuthenticateService();
 		await authenticateSerAuthenticateService.execute({
 			email,
 			password,

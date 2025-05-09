@@ -1,14 +1,19 @@
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
 import { compare } from "bcryptjs";
-import { describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test } from "vitest";
 import { UserAlreadyExistsError } from "./errors/user-already-exists";
 import { RegisterService } from "./register";
 
-describe("Register Service", () => {
-	test("should register", async () => {
-		const usersRepository = new InMemoryUsersRepository();
-		const registerService = new RegisterService(usersRepository);
+let usersRepository: InMemoryUsersRepository;
+let registerService: RegisterService;
 
+describe("Register Service", () => {
+	beforeEach(() => {
+		usersRepository = new InMemoryUsersRepository();
+		registerService = new RegisterService(usersRepository);
+	});
+
+	test("should register", async () => {
 		const { user } = await registerService.execute({
 			name: "John Doe",
 			email: "johndoe@example.com",
@@ -19,10 +24,6 @@ describe("Register Service", () => {
 	});
 
 	test("should hash user password upon registration", async () => {
-		const usersRepository = new InMemoryUsersRepository();
-
-		const registerService = new RegisterService(usersRepository);
-
 		const { user } = await registerService.execute({
 			name: "John Doe",
 			email: "john.doe@gmail.com",
@@ -38,9 +39,6 @@ describe("Register Service", () => {
 	});
 
 	test("should not be able to register with same email twice", async () => {
-		const usersRepository = new InMemoryUsersRepository();
-		const registerService = new RegisterService(usersRepository);
-
 		const email = "johndoe@example.com";
 
 		await registerService.execute({

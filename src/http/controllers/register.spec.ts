@@ -4,17 +4,15 @@ import { makeRegisterService } from "@/services/factories/make-register-service"
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { type Mock, beforeEach, describe, expect, it, vi } from "vitest";
 
-// Mock the necessary dependencies
 vi.mock("@/services/factories/make-register-service");
 vi.mock("@/repositories/prisma/prisma-users-repository");
 
 describe("register controller", () => {
 	let mockRequest: FastifyRequest;
 	let mockReply: FastifyReply;
-	let registerService: { execute: vi.Mock };
+	let registerService: { execute: Mock };
 
 	beforeEach(() => {
-		// Mock the request and reply
 		mockRequest = {
 			body: {
 				name: "John",

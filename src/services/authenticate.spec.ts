@@ -5,12 +5,12 @@ import { AuthenticateService } from "./authenticate";
 import { InvalidCredentialsError } from "./errors/invalid-credentials";
 
 let usersRepository: InMemoryUsersRepository;
-let authenticateService: AuthenticateService;
+let sut: AuthenticateService;
 
 describe("Authenticate Service", () => {
 	beforeEach(() => {
 		usersRepository = new InMemoryUsersRepository();
-		authenticateService = new AuthenticateService(usersRepository);
+		sut = new AuthenticateService(usersRepository);
 	});
 
 	test("should authenticate", async () => {
@@ -20,7 +20,7 @@ describe("Authenticate Service", () => {
 			password_hash: await hash("123456", 6),
 		});
 
-		const { user } = await authenticateService.execute({
+		const { user } = await sut.execute({
 			email: "johndoe@example.com",
 			password: "123456",
 		});
@@ -31,7 +31,7 @@ describe("Authenticate Service", () => {
 	test("wrong email", async () => {
 		expect(
 			async () =>
-				await authenticateService.execute({
+				await sut.execute({
 					email: "johndoe@example.com",
 					password: "123456",
 				}),
@@ -47,7 +47,7 @@ describe("Authenticate Service", () => {
 
 		expect(
 			async () =>
-				await authenticateService.execute({
+				await sut.execute({
 					email: "johndoe@example.com",
 					password: "123455",
 				}),

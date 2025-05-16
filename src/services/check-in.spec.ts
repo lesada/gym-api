@@ -17,8 +17,8 @@ describe("Check-in Use Case", () => {
 			id: "gym-01",
 			title: "Gym 01",
 			description: "",
-			latitude: Decimal(0.001),
-			longitude: Decimal(0.001),
+			latitude: Decimal(34.0194),
+			longitude: Decimal(-118.411),
 			phone: "",
 		});
 
@@ -34,11 +34,31 @@ describe("Check-in Use Case", () => {
 		const { checkIn } = await sut.execute({
 			gymId: "gym-01",
 			userId: "user-01",
-			userLatitude: 0,
-			userLongitude: 0,
+			userLatitude: 34.0194,
+			userLongitude: -118.411,
 		});
 
 		expect(checkIn.id).toEqual(expect.any(String));
+	});
+
+	it("should not be able to check in on distant gym", async () => {
+		gymsRepository.items.push({
+			id: "gym-02",
+			title: "Gym 02",
+			description: "",
+			latitude: Decimal(37.7272),
+			longitude: Decimal(-123.032),
+			phone: "",
+		});
+
+		await expect(() =>
+			sut.execute({
+				gymId: "gym-02",
+				userId: "user-01",
+				userLatitude: 34.0194,
+				userLongitude: -118.411,
+			}),
+		).rejects.toBeInstanceOf(Error);
 	});
 
 	it("should not be able to check in twice in the same day", async () => {
@@ -47,16 +67,16 @@ describe("Check-in Use Case", () => {
 		await sut.execute({
 			gymId: "gym-01",
 			userId: "user-01",
-			userLatitude: 0,
-			userLongitude: 0,
+			userLatitude: 34.0194,
+			userLongitude: -118.411,
 		});
 
 		await expect(() =>
 			sut.execute({
 				gymId: "gym-01",
 				userId: "user-01",
-				userLatitude: 0,
-				userLongitude: 0,
+				userLatitude: 34.0194,
+				userLongitude: -118.411,
 			}),
 		).rejects.toBeInstanceOf(Error);
 	});
@@ -67,8 +87,8 @@ describe("Check-in Use Case", () => {
 		await sut.execute({
 			gymId: "gym-01",
 			userId: "user-01",
-			userLatitude: 0,
-			userLongitude: 0,
+			userLatitude: 34.0194,
+			userLongitude: -118.411,
 		});
 
 		vi.setSystemTime(new Date(2022, 0, 21, 8, 0, 0));
@@ -76,8 +96,8 @@ describe("Check-in Use Case", () => {
 		const { checkIn } = await sut.execute({
 			gymId: "gym-01",
 			userId: "user-01",
-			userLatitude: 0,
-			userLongitude: 0,
+			userLatitude: 34.0194,
+			userLongitude: -118.411,
 		});
 
 		expect(checkIn.id).toEqual(expect.any(String));

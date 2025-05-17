@@ -1,8 +1,8 @@
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
 import { compare } from "bcryptjs";
 import { beforeEach, describe, expect, test } from "vitest";
-import { UserAlreadyExistsError } from "./errors/user-already-exists";
-import { RegisterService } from "./register";
+import { UserAlreadyExistsError } from "../errors/user-already-exists";
+import { RegisterService } from "../register";
 
 let usersRepository: InMemoryUsersRepository;
 let sut: RegisterService;

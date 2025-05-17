@@ -8,17 +8,17 @@ let checkInsRepository: InMemoryCheckInsRepository;
 let gymsRepository: InMemoryGymsRepository;
 let sut: CheckInService;
 
-describe("Check-in Use Case", () => {
-	beforeEach(() => {
+describe("Check-in Service", () => {
+	beforeEach(async () => {
 		checkInsRepository = new InMemoryCheckInsRepository();
 		gymsRepository = new InMemoryGymsRepository();
 
-		gymsRepository.items.push({
+		await gymsRepository.create({
 			id: "gym-01",
 			title: "Gym 01",
 			description: "",
-			latitude: Decimal(34.0194),
-			longitude: Decimal(-118.411),
+			latitude: 34.0194,
+			longitude: -118.411,
 			phone: "",
 		});
 

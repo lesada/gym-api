@@ -1,8 +1,8 @@
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
 import { hash } from "bcryptjs";
 import { beforeEach, describe, expect, test } from "vitest";
-import { AuthenticateService } from "./authenticate";
-import { InvalidCredentialsError } from "./errors/invalid-credentials";
+import { AuthenticateService } from "../authenticate";
+import { InvalidCredentialsError } from "../errors/invalid-credentials";
 
 let usersRepository: InMemoryUsersRepository;
 let sut: AuthenticateService;
@@ -29,7 +29,7 @@ describe("Authenticate Service", () => {
 	});
 
 	test("wrong email", async () => {
-		expect(
+		await expect(
 			async () =>
 				await sut.execute({
 					email: "johndoe@example.com",
@@ -45,7 +45,7 @@ describe("Authenticate Service", () => {
 			password_hash: await hash("123456", 6),
 		});
 
-		expect(
+		await expect(
 			async () =>
 				await sut.execute({
 					email: "johndoe@example.com",

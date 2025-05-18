@@ -3,8 +3,8 @@ import { InMemoryGymsRepository } from "@/repositories/in-memory/in-memory-gyms-
 import { CheckInService } from "@/services/check-in";
 import { Decimal } from "@prisma/client/runtime/library";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { MaxDistanceError } from "./errors/max-distance";
-import { MaxNumberOfCheckInsError } from "./errors/max-number-of-check-ins";
+import { MaxDistanceError } from "../errors/max-distance";
+import { MaxNumberOfCheckInsError } from "../errors/max-number-of-check-ins";
 
 let checkInsRepository: InMemoryCheckInsRepository;
 let gymsRepository: InMemoryGymsRepository;

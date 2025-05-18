@@ -1,6 +1,6 @@
 import type { CheckInsRepository } from "@/repositories/check-ins-repository";
 import type { GymsRepository } from "@/repositories/gyms-repository";
-import { getDistanceBetweenCordinates } from "@/utils/getDistanceBetweenCordinates";
+import { getDistanceBetweenCoordinates } from "@/utils/getDistanceBetweenCordinates";
 import type { CheckIn } from "@prisma/client";
 import { MaxDistanceError } from "./errors/max-distance";
 import { MaxNumberOfCheckInsError } from "./errors/max-number-of-check-ins";
@@ -35,7 +35,7 @@ export class CheckInService {
 			throw new ResourceNotFoundError();
 		}
 
-		const distance = getDistanceBetweenCordinates(
+		const distance = getDistanceBetweenCoordinates(
 			{
 				latitude: userLatitude,
 				longitude: userLongitude,

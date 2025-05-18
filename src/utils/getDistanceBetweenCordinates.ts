@@ -3,7 +3,7 @@ export interface Cordinate {
 	longitude: number;
 }
 
-export function getDistanceBetweenCordinates(from: Cordinate, to: Cordinate) {
+export function getDistanceBetweenCoordinates(from: Cordinate, to: Cordinate) {
 	if (from.latitude === to.latitude && from.longitude === to.longitude)
 		return 0;
 

@@ -1,6 +1,6 @@
 import { InMemoryCheckInsRepository } from "@/repositories/in-memory/in-memory-check-ins-repository";
 import { beforeEach, describe, expect, it } from "vitest";
-import { GetUserCheckInsHistoryService } from "../get-members-check-ins-history";
+import { GetUserCheckInsHistoryService } from "../get-user-check-ins-history";
 
 let checkInsRepository: InMemoryCheckInsRepository;
 let sut: GetUserCheckInsHistoryService;

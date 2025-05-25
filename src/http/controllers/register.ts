@@ -18,11 +18,6 @@ export async function register(req: FastifyRequest, rep: FastifyReply) {
 		if (error instanceof UserAlreadyExistsError)
 			return rep.status(409).send({ message: error.message });
 
-		if (error instanceof z.ZodError)
-			return rep
-				.status(400)
-				.send({ message: error.format(), type: "validation" });
-
 		throw error;
 	}
 

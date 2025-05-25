@@ -17,6 +17,26 @@ describe("register controller", () => {
 			email: "john@doe.com",
 			password: "123456",
 		});
-		expect(response.status).toBe(201);
+		expect(response.statusCode).toBe(201);
+	});
+
+	it("should return 409 if user already exists", async () => {
+		const response = await supertest(app.server).post("/users").send({
+			name: "John Doe",
+			email: "john@doe.com",
+			password: "123456",
+		});
+
+		expect(response.statusCode).toBe(409);
+	});
+
+	it("should return 400 if request body is invalid", async () => {
+		const response = await supertest(app.server).post("/users").send({
+			name: "John Doe",
+			password: "123456",
+		});
+
+		expect(response.statusCode).toBe(400);
+		console.log(response.body.message);
 	});
 });

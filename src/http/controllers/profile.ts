@@ -2,14 +2,16 @@ import { makeGetUserProfileService } from "@/services/factories/make-get-user-pr
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-export const profileBodySchema = z.object({
-	email: z.string().email(),
-	password: z.string().min(6),
+export const profileResponseSchema = z.object({
+	user: z.object({
+		id: z.string().uuid(),
+		name: z.string(),
+		email: z.string(),
+		created_at: z.coerce.date(),
+	}),
 });
 
 export async function profile(request: FastifyRequest, reply: FastifyReply) {
-	await request.jwtVerify();
-
 	const getUserProfile = makeGetUserProfileService();
 
 	const { user } = await getUserProfile.execute({

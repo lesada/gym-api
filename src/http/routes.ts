@@ -3,8 +3,9 @@ import {
 	authenticate,
 	authenticateBodySchema,
 } from "./controllers/authenticate";
-import { profile } from "./controllers/profile";
+import { profile, profileResponseSchema } from "./controllers/profile";
 import { register, registerBodySchema } from "./controllers/register";
+import { verifyJWT } from "./middlewares/verify-jwt";
 
 export async function appRoutes(app: FastifyInstance) {
 	app.post(
@@ -34,8 +35,12 @@ export async function appRoutes(app: FastifyInstance) {
 	app.get(
 		"/me",
 		{
+			onRequest: [verifyJWT],
 			schema: {
-				tags: ["profile"],
+				tags: ["profusersile"],
+				response: {
+					200: profileResponseSchema,
+				},
 				summary: "Get user profile",
 			},
 		},

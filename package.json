@@ -8,7 +8,7 @@
 		"build": "tsup src --out-dir build",
 		"start": "node build/server.js",
 		"lint": "biome format --write ./src",
-		"coverage": "vitest run --coverage",
+		"coverage": "NODE_ENV=test vitest run --coverage",
 		"test": "vitest",
 		"test:unit": "vitest --project unit",
 		"test:e2e": "vitest --project e2e",

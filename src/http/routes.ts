@@ -37,7 +37,7 @@ export async function appRoutes(app: FastifyInstance) {
 		{
 			onRequest: [verifyJWT],
 			schema: {
-				tags: ["profusersile"],
+				tags: ["users"],
 				response: {
 					200: profileResponseSchema,
 				},

@@ -26,7 +26,7 @@ export default (<Environment>{
 
 		process.env.DATABASE_URL = generateDatabaseUrl(schema);
 
-		execSync("npx prisma migrate deploy");
+		execSync("pnpm prisma migrate deploy", { stdio: "inherit" });
 
 		return {
 			async teardown() {

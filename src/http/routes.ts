@@ -3,6 +3,7 @@ import {
 	authenticate,
 	authenticateBodySchema,
 } from "./controllers/authenticate";
+import { profile } from "./controllers/profile";
 import { register, registerBodySchema } from "./controllers/register";
 
 export async function appRoutes(app: FastifyInstance) {
@@ -27,5 +28,17 @@ export async function appRoutes(app: FastifyInstance) {
 			},
 		},
 		register,
+	);
+
+	// Authenticated routes
+	app.get(
+		"/me",
+		{
+			schema: {
+				tags: ["profile"],
+				summary: "Get user profile",
+			},
+		},
+		profile,
 	);
 }

@@ -1,3 +1,4 @@
+import fastifyJwt from "@fastify/jwt";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import fastify from "fastify";
@@ -11,6 +12,10 @@ import { env } from "./env";
 import { appRoutes } from "./http/routes";
 
 export const app = fastify();
+
+app.register(fastifyJwt, {
+	secret: env.JWT_SECRET,
+});
 
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);

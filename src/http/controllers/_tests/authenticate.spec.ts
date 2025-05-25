@@ -2,7 +2,7 @@ import { app } from "@/app";
 import supertest from "supertest";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-describe("register controller", () => {
+describe("authenticate controller", () => {
 	beforeAll(async () => {
 		await app.ready();
 	});

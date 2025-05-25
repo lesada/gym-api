@@ -2,7 +2,7 @@ import { app } from "@/app";
 import supertest from "supertest";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-describe("register controller", () => {
+describe("profile controller", () => {
 	beforeAll(async () => {
 		await app.ready();
 	});
@@ -11,32 +11,31 @@ describe("register controller", () => {
 		await app.close();
 	});
 
-	it("should successfully register a user", async () => {
-		const response = await supertest(app.server).post("/users").send({
-			name: "John Doe",
-			email: "john@doe.com",
-			password: "123456",
-		});
-		expect(response.statusCode).toBe(201);
-	});
-
-	it("should return 409 if user already exists", async () => {
-		const response = await supertest(app.server).post("/users").send({
+	it("should successfully get the user profile", async () => {
+		await supertest(app.server).post("/users").send({
 			name: "John Doe",
 			email: "john@doe.com",
 			password: "123456",
 		});
 
-		expect(response.statusCode).toBe(409);
-	});
-
-	it("should return 400 if request body is invalid", async () => {
-		const response = await supertest(app.server).post("/users").send({
-			name: "John Doe",
+		const authResponse = await supertest(app.server).post("/auth").send({
+			email: "john@doe.com",
 			password: "123456",
 		});
 
-		expect(response.statusCode).toBe(400);
-		console.log(response.body.message);
+		const { token } = authResponse.body;
+		const response = await supertest(app.server)
+			.get("/me")
+			.set("Authorization", `Bearer ${token}`);
+
+		expect(response.statusCode).toBe(200);
+		expect(response.body).toEqual({
+			user: {
+				id: expect.any(String),
+				name: "John Doe",
+				email: "john@doe.com",
+				created_at: expect.any(String),
+			},
+		});
 	});
 });

@@ -1,3 +1,4 @@
+import fastifyCookie from "@fastify/cookie";
 import fastifyJwt from "@fastify/jwt";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
@@ -15,7 +16,16 @@ export const app = fastify();
 
 app.register(fastifyJwt, {
 	secret: env.JWT_SECRET,
+	cookie: {
+		signed: false,
+		cookieName: "refreshToken",
+	},
+	sign: {
+		expiresIn: "10m",
+	},
 });
+
+app.register(fastifyCookie);
 
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);

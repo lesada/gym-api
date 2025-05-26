@@ -5,12 +5,12 @@ export async function createAndAuthenticateUser() {
 	await supertest(app.server).post("/users").send({
 		name: "John Doe",
 		email: "john@doe.com",
-		password: "123456",
+		password: "123456", //NOSONAR,
 	});
 
 	const authResponse = await supertest(app.server).post("/auth").send({
 		email: "john@doe.com",
-		password: "123456",
+		password: "123456", //NOSONAR,
 	});
 
 	const { token } = authResponse.body;

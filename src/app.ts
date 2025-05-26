@@ -1,3 +1,4 @@
+import fastifyJwt from "@fastify/jwt";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import fastify from "fastify";
@@ -11,6 +12,10 @@ import { env } from "./env";
 import { appRoutes } from "./http/routes";
 
 export const app = fastify();
+
+app.register(fastifyJwt, {
+	secret: env.JWT_SECRET,
+});
 
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
@@ -38,10 +43,16 @@ app.setErrorHandler((error, _, reply) => {
 			.send({ message: "Validation error.", issues: error.format() });
 	}
 
+	if (error.validation && error.code === "FST_ERR_VALIDATION") {
+		return reply
+			.status(400)
+			.send({ message: "Validation error.", issues: error.validation });
+	}
+
 	if (env.NODE_ENV !== "production") {
 		console.error(error);
 	} else {
-		// TODO: Here we should log to a external tool like DataDog/NewRelic/Sentry
+		// TODO: log to external service
 	}
 
 	return reply.status(500).send({ message: "Internal server error." });

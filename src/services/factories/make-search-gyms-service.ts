@@ -1,9 +1,9 @@
-import { PrismaUsersRepository } from "@/repositories/prisma/prisma-users-repository";
-import { RegisterService } from "../register";
+import { PrismaGymsRepository } from "@/repositories/prisma/prisma-gyms-repository";
+import { SearchGymsService } from "../search-gyms";
 
-export function makeRegisterService() {
-	const usersRepository = new PrismaUsersRepository();
-	const registerService = new RegisterService(usersRepository);
+export function makeSearchGymsService() {
+	const gymsRepository = new PrismaGymsRepository();
+	const service = new SearchGymsService(gymsRepository);
 
-	return registerService;
+	return service;
 }

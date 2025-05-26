@@ -1,6 +1,23 @@
 import type { FastifyInstance } from "fastify";
+import { z } from "zod";
 import { verifyJWT } from "../../middlewares/verify-jwt";
 import { createGym, createGymBodySchema } from "./create";
+import { nearbyGymsQuerySchema } from "./nearby";
+import { searchGymsQuerySchema } from "./search";
+
+const gymsResponse = z.object({
+	gyms: z.array(
+		z.object({
+			id: z.string(),
+			title: z.string(),
+			description: z.string().nullable(),
+			phone: z.string().nullable(),
+			latitude: z.number(),
+			longitude: z.number(),
+			created_at: z.string(),
+		}),
+	),
+});
 
 export async function gymsRoutes(app: FastifyInstance) {
 	app.addHook("onRequest", verifyJWT);
@@ -12,6 +29,36 @@ export async function gymsRoutes(app: FastifyInstance) {
 				body: createGymBodySchema,
 				tags: ["gyms"],
 				summary: "Create Gym",
+			},
+		},
+		createGym,
+	);
+
+	app.get(
+		"/search",
+		{
+			schema: {
+				querystring: searchGymsQuerySchema,
+				tags: ["gyms"],
+				summary: "Search gyms",
+				response: {
+					200: gymsResponse,
+				},
+			},
+		},
+		createGym,
+	);
+
+	app.get(
+		"/nearby",
+		{
+			schema: {
+				querystring: nearbyGymsQuerySchema,
+				tags: ["gyms"],
+				summary: "Get nearby gyms",
+				response: {
+					200: gymsResponse,
+				},
 			},
 		},
 		createGym,

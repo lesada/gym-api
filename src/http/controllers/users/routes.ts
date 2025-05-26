@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import { verifyJWT } from "../../middlewares/verify-jwt";
 import { authenticate, authenticateBodySchema } from "./authenticate";
 import { profile, profileResponseSchema } from "./profile";
+import { refresh } from "./refresh";
 import { register, registerBodySchema } from "./register";
 
 export async function usersRoutes(app: FastifyInstance) {
@@ -27,6 +28,17 @@ export async function usersRoutes(app: FastifyInstance) {
 			},
 		},
 		register,
+	);
+
+	app.patch(
+		"/token/refresh",
+		{
+			schema: {
+				tags: ["users"],
+				summary: "Refresh JWT token",
+			},
+		},
+		refresh,
 	);
 
 	// Authenticated routes

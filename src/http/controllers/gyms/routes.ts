@@ -2,8 +2,8 @@ import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { verifyJWT } from "../../middlewares/verify-jwt";
 import { createGym, createGymBodySchema } from "./create";
-import { nearbyGymsQuerySchema } from "./nearby";
-import { searchGymsQuerySchema } from "./search";
+import { nearbyGyms, nearbyGymsQuerySchema } from "./nearby";
+import { searchGyms, searchGymsQuerySchema } from "./search";
 
 const gymsResponse = z.object({
 	gyms: z.array(
@@ -46,7 +46,7 @@ export async function gymsRoutes(app: FastifyInstance) {
 				},
 			},
 		},
-		createGym,
+		searchGyms,
 	);
 
 	app.get(
@@ -61,6 +61,6 @@ export async function gymsRoutes(app: FastifyInstance) {
 				},
 			},
 		},
-		createGym,
+		nearbyGyms,
 	);
 }

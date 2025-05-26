@@ -12,11 +12,11 @@ export const nearbyGymsQuerySchema = z.object({
 });
 
 export async function nearbyGyms(req: FastifyRequest, rep: FastifyReply) {
-	const { latitude, longitude } = nearbyGymsQuerySchema.parse(req.body);
+	const { latitude, longitude } = nearbyGymsQuerySchema.parse(req.query);
 
 	const nearbyGymsService = makeGetNearbyGymsService();
 
-	const gyms = await nearbyGymsService.execute({
+	const { gyms } = await nearbyGymsService.execute({
 		userLatitude: latitude,
 		userLongitude: longitude,
 	});

@@ -12,9 +12,8 @@ const gymsResponse = z.object({
 			title: z.string(),
 			description: z.string().nullable(),
 			phone: z.string().nullable(),
-			latitude: z.number(),
-			longitude: z.number(),
-			created_at: z.string(),
+			latitude: z.coerce.number(),
+			longitude: z.coerce.number(),
 		}),
 	),
 });

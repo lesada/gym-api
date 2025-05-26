@@ -7,6 +7,7 @@ import {
 	createCheckInParamsSchema,
 } from "./create";
 import { history, historyQuerySchema, historyResponseSchema } from "./history";
+import { metrics } from "./metrics";
 import { validateCheckIn } from "./validate";
 
 export async function checkInsRoutes(app: FastifyInstance) {
@@ -53,7 +54,7 @@ export async function checkInsRoutes(app: FastifyInstance) {
 				},
 			},
 		},
-		history,
+		metrics,
 	);
 
 	app.patch(

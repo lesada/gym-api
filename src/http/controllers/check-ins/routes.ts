@@ -60,6 +60,7 @@ export async function checkInsRoutes(app: FastifyInstance) {
 	app.patch(
 		"/:checkInId/validate",
 		{
+			onRequest: [verifyUserRole("ADMIN")],
 			schema: {
 				params: z.object({
 					checkInId: z.string().uuid(),

@@ -24,6 +24,7 @@ export async function gymsRoutes(app: FastifyInstance) {
 	app.post(
 		"/create",
 		{
+			onRequest: [verifyUserRole("ADMIN")],
 			schema: {
 				body: createGymBodySchema,
 				tags: ["gyms"],

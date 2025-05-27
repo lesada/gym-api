@@ -14,7 +14,7 @@ describe("search gyms controller", () => {
 	});
 
 	it("should be able to validate a check-in", async () => {
-		const { token } = await createAndAuthenticateUser();
+		const { token } = await createAndAuthenticateUser("ADMIN");
 
 		const user = await prisma.user.findFirstOrThrow();
 

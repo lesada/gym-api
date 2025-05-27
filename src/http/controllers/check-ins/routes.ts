@@ -1,3 +1,4 @@
+import { verifyUserRole } from "@/http/middlewares/verify-user-role";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { verifyJWT } from "../../middlewares/verify-jwt";

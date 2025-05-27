@@ -1,3 +1,4 @@
+import { verifyUserRole } from "@/http/middlewares/verify-user-role";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { verifyJWT } from "../../middlewares/verify-jwt";
@@ -60,6 +61,7 @@ export async function checkInsRoutes(app: FastifyInstance) {
 	app.patch(
 		"/:checkInId/validate",
 		{
+			onRequest: [verifyUserRole("ADMIN")],
 			schema: {
 				params: z.object({
 					checkInId: z.string().uuid(),

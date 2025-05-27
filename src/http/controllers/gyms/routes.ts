@@ -1,3 +1,4 @@
+import { verifyUserRole } from "@/http/middlewares/verify-user-role";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { verifyJWT } from "../../middlewares/verify-jwt";
@@ -24,6 +25,7 @@ export async function gymsRoutes(app: FastifyInstance) {
 	app.post(
 		"/create",
 		{
+			onRequest: [verifyUserRole("ADMIN")],
 			schema: {
 				body: createGymBodySchema,
 				tags: ["gyms"],

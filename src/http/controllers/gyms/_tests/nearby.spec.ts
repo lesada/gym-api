@@ -13,7 +13,7 @@ describe("nearby gyms controller", () => {
 	});
 
 	it("should successfully get nearby gyms", async () => {
-		const { token } = await createAndAuthenticateUser();
+		const { token } = await createAndAuthenticateUser("ADMIN");
 		await supertest(app.server)
 			.post("/gyms/create")
 			.set("Authorization", `Bearer ${token}`)
